@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Raw vs Optimized Queries">
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Raw queries user group">
+        <intProp name="ThreadGroup.num_threads">10</intProp>
+        <intProp name="ThreadGroup.ramp_time">20</intProp>
+        <longProp name="ThreadGroup.duration">600</longProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
+          <intProp name="LoopController.loops">-1</intProp>
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+        </elementProp>
+      </ThreadGroup>
+      <hashTree>
+        <JDBCDataSource guiclass="TestBeanGUI" testclass="JDBCDataSource" testname="JDBC Connection Configuration">
+          <boolProp name="autocommit">true</boolProp>
+          <stringProp name="checkQuery">SELECT 1</stringProp>
+          <stringProp name="connectionAge">5000</stringProp>
+          <stringProp name="connectionProperties"></stringProp>
+          <stringProp name="dataSource">MySQLDS</stringProp>
+          <stringProp name="dbUrl">jdbc:mysql://localhost:3306/ecommerce_db</stringProp>
+          <stringProp name="driver">com.mysql.jdbc.Driver</stringProp>
+          <stringProp name="initQuery"></stringProp>
+          <boolProp name="keepAlive">true</boolProp>
+          <stringProp name="password">Admin@25</stringProp>
+          <stringProp name="poolMax">0</stringProp>
+          <boolProp name="preinit">false</boolProp>
+          <stringProp name="timeout">10000</stringProp>
+          <stringProp name="transactionIsolation">DEFAULT</stringProp>
+          <stringProp name="trimInterval">60000</stringProp>
+          <stringProp name="username">saiyeru</stringProp>
+        </JDBCDataSource>
+        <hashTree/>
+        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request 1">
+          <stringProp name="dataSource">MySQLDS</stringProp>
+          <stringProp name="queryType">Select Statement</stringProp>
+          <stringProp name="query">SELECT SQL_NO_CACHE p.name, r.rating, r.review_text 
+FROM products p 
+JOIN reviews AS r ON p.product_id = r.product_id 
+WHERE r.rating &gt;= 4;</stringProp>
+          <stringProp name="queryArguments"></stringProp>
+          <stringProp name="queryArgumentsTypes"></stringProp>
+          <stringProp name="variableNames"></stringProp>
+          <stringProp name="resultVariable"></stringProp>
+          <stringProp name="queryTimeout"></stringProp>
+          <stringProp name="resultSetMaxRows"></stringProp>
+          <stringProp name="resultSetHandler">Store as String</stringProp>
+        </JDBCSampler>
+        <hashTree>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer">
+            <stringProp name="ConstantTimer.delay">3000</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request 2">
+          <stringProp name="dataSource">MySQLDS</stringProp>
+          <stringProp name="queryType">Select Statement</stringProp>
+          <stringProp name="query">SELECT SQL_NO_CACHE order_id, total_price 
+FROM orders 
+WHERE total_price &gt; 1500;</stringProp>
+          <stringProp name="queryArguments"></stringProp>
+          <stringProp name="queryArgumentsTypes"></stringProp>
+          <stringProp name="variableNames"></stringProp>
+          <stringProp name="resultVariable"></stringProp>
+          <stringProp name="queryTimeout"></stringProp>
+          <stringProp name="resultSetMaxRows"></stringProp>
+          <stringProp name="resultSetHandler">Store as String</stringProp>
+        </JDBCSampler>
+        <hashTree>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer">
+            <stringProp name="ConstantTimer.delay">3000</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request 3">
+          <stringProp name="dataSource">MySQLDS</stringProp>
+          <stringProp name="queryType">Select Statement</stringProp>
+          <stringProp name="query">SELECT SQL_NO_CACHE name, stock 
+FROM products 
+WHERE stock &lt; 10;</stringProp>
+          <stringProp name="queryArguments"></stringProp>
+          <stringProp name="queryArgumentsTypes"></stringProp>
+          <stringProp name="variableNames"></stringProp>
+          <stringProp name="resultVariable"></stringProp>
+          <stringProp name="queryTimeout"></stringProp>
+          <stringProp name="resultSetMaxRows"></stringProp>
+          <stringProp name="resultSetHandler">Store as String</stringProp>
+        </JDBCSampler>
+        <hashTree>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+            <stringProp name="ConstantTimer.delay">3000</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request 4">
+          <stringProp name="dataSource">MySQLDS</stringProp>
+          <stringProp name="queryType">Select Statement</stringProp>
+          <stringProp name="query">SELECT SQL_NO_CACHE product_id, AVG(rating) AS avg_rating 
+FROM reviews 
+GROUP BY product_id 
+HAVING avg_rating &gt; 4.5;</stringProp>
+          <stringProp name="queryArguments"></stringProp>
+          <stringProp name="queryArgumentsTypes"></stringProp>
+          <stringProp name="variableNames"></stringProp>
+          <stringProp name="resultVariable"></stringProp>
+          <stringProp name="queryTimeout"></stringProp>
+          <stringProp name="resultSetMaxRows"></stringProp>
+          <stringProp name="resultSetHandler">Store as String</stringProp>
+        </JDBCSampler>
+        <hashTree>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+            <stringProp name="ConstantTimer.delay">3000</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="JDBC Request 5">
+          <stringProp name="dataSource">MySQLDS</stringProp>
+          <stringProp name="queryType">Select Statement</stringProp>
+          <stringProp name="query">SELECT SQL_NO_CACHE name 
+FROM products 
+WHERE product_id IN (SELECT product_id FROM reviews WHERE rating = 5);</stringProp>
+          <stringProp name="queryArguments"></stringProp>
+          <stringProp name="queryArgumentsTypes"></stringProp>
+          <stringProp name="variableNames"></stringProp>
+          <stringProp name="resultVariable"></stringProp>
+          <stringProp name="queryTimeout"></stringProp>
+          <stringProp name="resultSetMaxRows"></stringProp>
+          <stringProp name="resultSetHandler">Store as String</stringProp>
+        </JDBCSampler>
+        <hashTree>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+            <stringProp name="ConstantTimer.delay">3000</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Optimized queries user group">
+        <intProp name="ThreadGroup.num_threads">10</intProp>
+        <intProp name="ThreadGroup.ramp_time">20</intProp>
+        <longProp name="ThreadGroup.duration">600</longProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">false</boolProp>
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
+          <intProp name="LoopController.loops">-1</intProp>
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+        </elementProp>
+      </ThreadGroup>
+      <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Optimized Query API Call 1">
+          <stringProp name="HTTPSampler.domain">localhost</stringProp>
+          <stringProp name="HTTPSampler.port">5000</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.path">/query/0</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor">
+            <stringProp name="JSONPostProcessor.referenceNames">query_exec_time_1</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.actual_execution_time</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+          <JSR223Listener guiclass="TestBeanGUI" testclass="JSR223Listener" testname="JSR223 Listener">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">import java.net.HttpURLConnection
+import java.net.URL
+
+def queryId = 1
+def influxUrl = &quot;http://localhost:8086/write?db=jmeter&quot;
+def measurement = &quot;optimized_query_exec&quot;
+
+def execTimeStr = vars.get(&quot;query_exec_time_1&quot;) ?: &quot;0&quot;
+log.info(&quot;Extracted exec time: &quot; + execTimeStr)
+
+def query = prev.getSamplerData().split(&quot;\\n&quot;)[1]
+def escapedQuery = query.replaceAll(&quot; &quot;, &quot;\\\\ &quot;)
+    .replaceAll(&quot;,&quot;, &quot;\\\\,&quot;)
+    .replaceAll(&quot;=&quot;, &quot;\\\\=&quot;)
+
+def responseTime = execTimeStr.toDouble()*1000
+def isOptimized = vars.get(&quot;is_optimized&quot;) ?: &quot;false&quot;
+def data = &quot;${measurement},query_id=${queryId},optimized=${isOptimized},query=\&quot;${escapedQuery}\&quot; response_time=${responseTime}&quot;
+
+log.info(&quot;Final data string: &quot; + data)
+
+try {
+    def url = new URL(influxUrl)
+    def conn = url.openConnection() as HttpURLConnection
+    conn.setRequestMethod(&quot;POST&quot;)
+    conn.setDoOutput(true)
+    conn.getOutputStream().write(data.getBytes(&quot;UTF-8&quot;))
+    def code = conn.getResponseCode()
+    log.info(&quot;Influx response code: &quot; + code)
+} catch (Exception e) {
+    log.error(&quot;Error writing to InfluxDB&quot;, e)
+}</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223Listener>
+          <hashTree/>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer">
+            <stringProp name="ConstantTimer.delay">3000</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Optimized Query API Call 2">
+          <stringProp name="HTTPSampler.domain">localhost</stringProp>
+          <stringProp name="HTTPSampler.port">5000</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.path">/query/1</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor">
+            <stringProp name="JSONPostProcessor.referenceNames">query_exec_time_2</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.actual_execution_time</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+          <JSR223Listener guiclass="TestBeanGUI" testclass="JSR223Listener" testname="JSR223 Listener">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">import java.net.HttpURLConnection
+import java.net.URL
+
+def queryId = 2
+def influxUrl = &quot;http://localhost:8086/write?db=jmeter&quot;
+def measurement = &quot;optimized_query_exec&quot;
+
+def execTimeStr = vars.get(&quot;query_exec_time_2&quot;) ?: &quot;0&quot;
+log.info(&quot;Extracted exec time: &quot; + execTimeStr)
+
+def query = prev.getSamplerData().split(&quot;\\n&quot;)[1]
+def escapedQuery = query.replaceAll(&quot; &quot;, &quot;\\\\ &quot;)
+    .replaceAll(&quot;,&quot;, &quot;\\\\,&quot;)
+    .replaceAll(&quot;=&quot;, &quot;\\\\=&quot;)
+
+def responseTime = execTimeStr.toDouble()*1000
+def isOptimized = vars.get(&quot;is_optimized&quot;) ?: &quot;false&quot;
+def data = &quot;${measurement},query_id=${queryId},optimized=${isOptimized},query=\&quot;${escapedQuery}\&quot; response_time=${responseTime}&quot;&quot;
+
+log.info(&quot;Final data string: &quot; + data)
+
+try {
+    def url = new URL(influxUrl)
+    def conn = url.openConnection() as HttpURLConnection
+    conn.setRequestMethod(&quot;POST&quot;)
+    conn.setDoOutput(true)
+    conn.getOutputStream().write(data.getBytes(&quot;UTF-8&quot;))
+    def code = conn.getResponseCode()
+    log.info(&quot;Influx response code: &quot; + code)
+} catch (Exception e) {
+    log.error(&quot;Error writing to InfluxDB&quot;, e)
+}</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223Listener>
+          <hashTree/>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer">
+            <stringProp name="ConstantTimer.delay">3000</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Optimized Query API Call 3">
+          <stringProp name="HTTPSampler.domain">localhost</stringProp>
+          <stringProp name="HTTPSampler.port">5000</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.path">/query/2</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor">
+            <stringProp name="JSONPostProcessor.referenceNames">query_exec_time_3</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.actual_execution_time</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+          <JSR223Listener guiclass="TestBeanGUI" testclass="JSR223Listener" testname="JSR223 Listener">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">import java.net.HttpURLConnection
+import java.net.URL
+
+def queryId = 3
+def influxUrl = &quot;http://localhost:8086/write?db=jmeter&quot;
+def measurement = &quot;optimized_query_exec&quot;
+
+def execTimeStr = vars.get(&quot;query_exec_time_3&quot;) ?: &quot;0&quot;
+log.info(&quot;Extracted exec time: &quot; + execTimeStr)
+
+def query = prev.getSamplerData().split(&quot;\\n&quot;)[1]
+def escapedQuery = query.replaceAll(&quot; &quot;, &quot;\\\\ &quot;)
+    .replaceAll(&quot;,&quot;, &quot;\\\\,&quot;)
+    .replaceAll(&quot;=&quot;, &quot;\\\\=&quot;)
+
+def responseTime = execTimeStr.toDouble()*1000
+def isOptimized = vars.get(&quot;is_optimized&quot;) ?: &quot;false&quot;
+def data = &quot;${measurement},query_id=${queryId},optimized=${isOptimized},query=\&quot;${escapedQuery}\&quot; response_time=${responseTime}&quot;
+
+log.info(&quot;Final data string: &quot; + data)
+
+try {
+    def url = new URL(influxUrl)
+    def conn = url.openConnection() as HttpURLConnection
+    conn.setRequestMethod(&quot;POST&quot;)
+    conn.setDoOutput(true)
+    conn.getOutputStream().write(data.getBytes(&quot;UTF-8&quot;))
+    def code = conn.getResponseCode()
+    log.info(&quot;Influx response code: &quot; + code)
+} catch (Exception e) {
+    log.error(&quot;Error writing to InfluxDB&quot;, e)
+}</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223Listener>
+          <hashTree/>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer">
+            <stringProp name="ConstantTimer.delay">3000</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Optimized Query API Call 4">
+          <stringProp name="HTTPSampler.domain">localhost</stringProp>
+          <stringProp name="HTTPSampler.port">5000</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.path">/query/3</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor">
+            <stringProp name="JSONPostProcessor.referenceNames">query_exec_time_4</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.actual_execution_time</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+          <JSR223Listener guiclass="TestBeanGUI" testclass="JSR223Listener" testname="JSR223 Listener">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">import java.net.HttpURLConnection
+import java.net.URL
+
+def queryId = 4
+def influxUrl = &quot;http://localhost:8086/write?db=jmeter&quot;
+def measurement = &quot;optimized_query_exec&quot;
+
+def execTimeStr = vars.get(&quot;query_exec_time_4&quot;) ?: &quot;0&quot;
+log.info(&quot;Extracted exec time: &quot; + execTimeStr)
+
+def query = prev.getSamplerData().split(&quot;\\n&quot;)[1]
+def escapedQuery = query.replaceAll(&quot; &quot;, &quot;\\\\ &quot;)
+    .replaceAll(&quot;,&quot;, &quot;\\\\,&quot;)
+    .replaceAll(&quot;=&quot;, &quot;\\\\=&quot;)
+
+def responseTime = execTimeStr.toDouble()*1000
+def isOptimized = vars.get(&quot;is_optimized&quot;) ?: &quot;false&quot;
+def data = &quot;${measurement},query_id=${queryId},optimized=${isOptimized},query=\&quot;${escapedQuery}\&quot; response_time=${responseTime}&quot;
+
+log.info(&quot;Final data string: &quot; + data)
+
+try {
+    def url = new URL(influxUrl)
+    def conn = url.openConnection() as HttpURLConnection
+    conn.setRequestMethod(&quot;POST&quot;)
+    conn.setDoOutput(true)
+    conn.getOutputStream().write(data.getBytes(&quot;UTF-8&quot;))
+    def code = conn.getResponseCode()
+    log.info(&quot;Influx response code: &quot; + code)
+} catch (Exception e) {
+    log.error(&quot;Error writing to InfluxDB&quot;, e)
+}</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223Listener>
+          <hashTree/>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer">
+            <stringProp name="ConstantTimer.delay">3000</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Optimized Query API Call 5">
+          <stringProp name="HTTPSampler.domain">localhost</stringProp>
+          <stringProp name="HTTPSampler.port">5000</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.path">/query/4</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor">
+            <stringProp name="JSONPostProcessor.referenceNames">query_exec_time_5</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.actual_execution_time</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+          <JSR223Listener guiclass="TestBeanGUI" testclass="JSR223Listener" testname="JSR223 Listener">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">import java.net.HttpURLConnection
+import java.net.URL
+
+def queryId = 5
+def influxUrl = &quot;http://localhost:8086/write?db=jmeter&quot;
+def measurement = &quot;optimized_query_exec&quot;
+
+def execTimeStr = vars.get(&quot;query_exec_time_5&quot;) ?: &quot;0&quot;
+log.info(&quot;Extracted exec time: &quot; + execTimeStr)
+
+def query = prev.getSamplerData().split(&quot;\\n&quot;)[1]
+def escapedQuery = query.replaceAll(&quot; &quot;, &quot;\\\\ &quot;)
+    .replaceAll(&quot;,&quot;, &quot;\\\\,&quot;)
+    .replaceAll(&quot;=&quot;, &quot;\\\\=&quot;)
+
+def responseTime = execTimeStr.toDouble()*1000
+def isOptimized = vars.get(&quot;is_optimized&quot;) ?: &quot;false&quot;
+def data = &quot;${measurement},query_id=${queryId},optimized=${isOptimized},query=\&quot;${escapedQuery}\&quot; response_time=${responseTime}&quot;
+
+log.info(&quot;Final data string: &quot; + data)
+
+try {
+    def url = new URL(influxUrl)
+    def conn = url.openConnection() as HttpURLConnection
+    conn.setRequestMethod(&quot;POST&quot;)
+    conn.setDoOutput(true)
+    conn.getOutputStream().write(data.getBytes(&quot;UTF-8&quot;))
+    def code = conn.getResponseCode()
+    log.info(&quot;Influx response code: &quot; + code)
+} catch (Exception e) {
+    log.error(&quot;Error writing to InfluxDB&quot;, e)
+}</stringProp>
+            <stringProp name="scriptLanguage">groovy</stringProp>
+          </JSR223Listener>
+          <hashTree/>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer">
+            <stringProp name="ConstantTimer.delay">3000</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <BackendListener guiclass="BackendListenerGui" testclass="BackendListener" testname="Backend Listener">
+        <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments">
+          <collectionProp name="Arguments.arguments">
+            <elementProp name="influxdbMetricsSender" elementType="Argument">
+              <stringProp name="Argument.name">influxdbMetricsSender</stringProp>
+              <stringProp name="Argument.value">org.apache.jmeter.visualizers.backend.influxdb.HttpMetricsSender</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="influxdbUrl" elementType="Argument">
+              <stringProp name="Argument.name">influxdbUrl</stringProp>
+              <stringProp name="Argument.value">http://localhost:8086/write?db=jmeter </stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="application" elementType="Argument">
+              <stringProp name="Argument.name">application</stringProp>
+              <stringProp name="Argument.value">ecommerce-db-test </stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="measurement" elementType="Argument">
+              <stringProp name="Argument.name">measurement</stringProp>
+              <stringProp name="Argument.value">jmeter_metrics</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="summaryOnly" elementType="Argument">
+              <stringProp name="Argument.name">summaryOnly</stringProp>
+              <stringProp name="Argument.value">false</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="samplersRegex" elementType="Argument">
+              <stringProp name="Argument.name">samplersRegex</stringProp>
+              <stringProp name="Argument.value">.*</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="percentiles" elementType="Argument">
+              <stringProp name="Argument.name">percentiles</stringProp>
+              <stringProp name="Argument.value">99;95;90;50</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="testTitle" elementType="Argument">
+              <stringProp name="Argument.name">testTitle</stringProp>
+              <stringProp name="Argument.value">DBTest</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="eventTags" elementType="Argument">
+              <stringProp name="Argument.name">eventTags</stringProp>
+              <stringProp name="Argument.value"></stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+          </collectionProp>
+        </elementProp>
+        <stringProp name="classname">org.apache.jmeter.visualizers.backend.influxdb.InfluxdbBackendListenerClient</stringProp>
+      </BackendListener>
+      <hashTree/>
+      <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>false</xml>
+            <fieldNames>true</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+            <sentBytes>true</sentBytes>
+            <url>true</url>
+            <threadCounts>true</threadCounts>
+            <idleTime>true</idleTime>
+            <connectTime>true</connectTime>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
