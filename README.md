@@ -51,14 +51,14 @@ Python 3.8+
 <br/>MySQL Connector for Python
 
 ## Team Contributions
---> Ananya
+--> Ananya Penuballi
 <br/>Designed and created the MySQL schema and dataset for products, reviews, and orders.
 <br/>Implemented core SQL optimization logic, including:
 <br/>  - Index suggestion and creation logic
 <br/>  - Query rewriting strategies (e.g., USE INDEX, SQL_NO_CACHE)
 <br/>  - Handling of subqueries, JOINs, and aggregations
   
-<br/>--> Sai
+<br/>--> Sai Sanjay Yerunkar
 <br/>Led the Flask API development, responsible for:
 <br/>Predictive optimization using a trained ML model (RandomForestRegressor)
 <br/>  - Executing optimized queries and logging performance
